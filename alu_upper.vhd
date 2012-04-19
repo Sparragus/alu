@@ -38,6 +38,7 @@ entity alu_upper is
            CTRL_INC2 : in  STD_LOGIC;
            CTRL_NOT : in  STD_LOGIC;
            CTRL_NEG : in  STD_LOGIC;
+			  CTRL_MAC : in STD_LOGIC;
 			  SUM: out STD_LOGIC_VECTOR (7 downto 0);
 			  CARRY_OUT: out STD_LOGIC;
 			  OVERFLOW: out STD_LOGIC);
@@ -94,6 +95,15 @@ architecture struct_alu_upper of alu_upper is
 				  V: out STD_LOGIC);
 	end component;
 	
+	COMPONENT MAC is
+    Port ( A : in  STD_LOGIC_VECTOR (3 downto 0);
+           B : in  STD_LOGIC_VECTOR (3 downto 0);
+           Enable : in  STD_LOGIC;
+           Sum : out  STD_LOGIC_VECTOR (7 downto 0);
+           Carry : out  STD_LOGIC;
+           V : out  STD_LOGIC);
+	END COMPONENT;
+	
 	signal 	ADD_OR_SUB,
 				INC2_OR_A1,
 				NOT_OR_SUB,
@@ -108,7 +118,7 @@ architecture struct_alu_upper of alu_upper is
 				OUT_A,
 				OUT_B: STD_LOGIC_VECTOR (7 downto 0);
 	
-
+	signal fourA, fourB: STD_LOGIC_VECTOR (3 downto 0);
 
 begin
 	
@@ -160,5 +170,16 @@ begin
 	-- Full Adder
 	ENABLE_ADD <= CTRL_ADD or CTRL_INC2 or CTRL_NOT or CTRL_SUB or CTRL_NEG;
 	U13: eightbit_fulladder PORT MAP (OUT_A, OUT_B, CARRY, ENABLE_ADD, SUM, CARRY_OUT, OVERFLOW);
+	
+	-- Mac
+	fourA(0) <= IN_A(0);
+	fourA(1) <= IN_A(1);
+	fourA(2) <= IN_A(2);
+	fourA(3) <= IN_A(3);
+	fourB(0) <= IN_B(0);
+	fourB(1) <= IN_B(1);
+	fourB(2) <= IN_B(2);
+	fourB(3) <= IN_B(3);
+	macmac: MAC PORT MAP (fourA, fourB, CTRL_MAC, SUM, CARRY_OUT, OVERFLOW);
 											
 end struct_alu_upper;

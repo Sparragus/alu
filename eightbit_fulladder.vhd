@@ -57,7 +57,7 @@ architecture struct_eightbit_fulladder of eightbit_fulladder is
 
 signal c1, c2, c3, c4, c5, c6, c7: STD_LOGIC;
 signal s0, s1, s2, s3, s4, s5, s6, s7: STD_LOGIC; 
-signal carry_out: STD_LOGIC;
+signal carry_out, bufsignal: STD_LOGIC;
 begin
 
 f1: fulladder PORT MAP (
@@ -116,7 +116,7 @@ f8: fulladder PORT MAP (
 	s7,
 	carry_out
 );
-V <= (A(7) xor s7) and not(A(7) xor B(7));
+bufsignal <= (A(7) xor s7) and not(A(7) xor B(7));
 b0: tri_buffer PORT MAP (
 s0,
 Sum(0),
@@ -168,6 +168,12 @@ Enable
 buffer_carry: tri_buffer PORT MAP (
 carry_out,
 Cout,
+Enable
+);
+
+buffer_v: tri_buffer PORT MAP (
+bufsignal,
+V,
 Enable
 );
 end struct_eightbit_fulladder;

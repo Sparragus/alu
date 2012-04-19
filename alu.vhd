@@ -54,17 +54,18 @@ end alu;
 architecture struct_alu of alu is
 
 	component alu_upper is
-		 Port ( IN_A : in  STD_LOGIC_VECTOR (7 downto 0);
-				  IN_B : in  STD_LOGIC_VECTOR (7 downto 0);
-				  CARRY_IN : in STD_LOGIC;
-				  CTRL_ADD : in  STD_LOGIC;
-				  CTRL_SUB : in  STD_LOGIC;
-				  CTRL_INC2 : in  STD_LOGIC;
-				  CTRL_NOT : in  STD_LOGIC;
-				  CTRL_NEG : in  STD_LOGIC;
-				  SUM: out STD_LOGIC_VECTOR (7 downto 0);
-				  CARRY_OUT: out STD_LOGIC;
-				  OVERFLOW: out STD_LOGIC);
+		  Port ( IN_A : in  STD_LOGIC_VECTOR (7 downto 0);
+           IN_B : in  STD_LOGIC_VECTOR (7 downto 0);
+			  CARRY_IN : in STD_LOGIC;
+           CTRL_ADD : in  STD_LOGIC;
+           CTRL_SUB : in  STD_LOGIC;
+           CTRL_INC2 : in  STD_LOGIC;
+           CTRL_NOT : in  STD_LOGIC;
+           CTRL_NEG : in  STD_LOGIC;
+			  CTRL_MAC : in STD_LOGIC;
+			  SUM: out STD_LOGIC_VECTOR (7 downto 0);
+			  CARRY_OUT: out STD_LOGIC;
+			  OVERFLOW: out STD_LOGIC);
 	end component;
 	
 	component alu_lower is
@@ -100,17 +101,20 @@ architecture struct_alu of alu is
 	
 	signal	UPPER_OVERFLOW,
 				CARRY,
-				ENABLE_CARRY: STD_LOGIC;
+				ENABLE_CARRY,
+				RESET_OVERFLOW: STD_LOGIC;
 
 begin
 	-- ALU Upper
 	upper: alu_upper PORT MAP (IN_A, IN_B, ACARREO, 
-										CTRL_ADDC, CTRL_SUB, CTRL_INC2, CTRL_NOT, CTRL_NEG,
+										CTRL_ADDC, CTRL_SUB, CTRL_INC2, CTRL_NOT, CTRL_NEG, CTRL_MAC,
 										SIGNAL_X, CARRY, UPPER_OVERFLOW);
 	-- ALU Lower
 	lower: alu_lower PORT MAP (IN_A, IN_B, ACARREO, 
 										CTRL_AND, CTRL_OR, CTRL_XOR, CTRL_RLC, CTRL_RRC, SIGNAL_X, CARRY);
 					
+	RESET_OVERFLOW <= NOT (CTRL_ADDC or CTRL_MAC);
+	v_tag: tri_buffer PORT MAP ('0', UPPER_OVERFLOW, RESET_OVERFLOW); 	
 	-- Calc Acarreo
 	ENABLE_CARRY <= NOT (CTRL_ADDC or CTRL_MAC or CTRL_SUB or CTRL_RLC or CTRL_RRC);
 	carry_tag: tri_buffer PORT MAP (ACARREO, CARRY, ENABLE_CARRY); 

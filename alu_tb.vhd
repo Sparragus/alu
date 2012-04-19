@@ -267,21 +267,21 @@ BEGIN
 		ACARREO <= '0';	
 			 
     -- MAC.
---      wait for 50 ns;	
---          IN_A <= "00000000";
---          IN_B <= "10101010";
---          CTRL_AND <= '0';
---          CTRL_OR <= '0';
---          CTRL_XOR <= '0';
---          CTRL_ADDC <= '0';
---          CTRL_SUB <= '0';
---          CTRL_MAC <= '1';
---          CTRL_NEG <= '0';
---          CTRL_NOT <= '0';
---          CTRL_RLC <= '0';
---          CTRL_RRC <= '0';
---          CTRL_INC2 <= '0';
---          ACARREO <= '1';	
+      wait for 50 ns;	
+          IN_A <= "00000000";
+          IN_B <= "10101010";
+          CTRL_AND <= '0';
+          CTRL_OR <= '0';
+          CTRL_XOR <= '0';
+          CTRL_ADDC <= '0';
+          CTRL_SUB <= '0';
+          CTRL_MAC <= '1';
+          CTRL_NEG <= '0';
+          CTRL_NOT <= '0';
+          CTRL_RLC <= '0';
+          CTRL_RRC <= '0';
+          CTRL_INC2 <= '0';
+          ACARREO <= '1';	
 			 
     -- NEG.
       wait for 50 ns;	
